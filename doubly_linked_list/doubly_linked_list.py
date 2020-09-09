@@ -101,17 +101,22 @@ class DoublyLinkedList:
     """Removes the input node from its current spot in the 
     List and inserts it as the new head node of the List."""
     def move_to_front(self, node):
+        # if the node is already at the head, do nothing
         if node is self.head:
             return
-
+        # otherwise create a variable to store the value of the node
         value = node.value
 
+        # if that node is the tail value
         if node is self.tail:
+            # remove it from the tail
             self.remove_from_tail()
+        #otherwise
         else:
+            # delete the node and dec length
             node.delete()
             self.length -= 1
-        
+        # create a new node at head with the variable
         self.add_to_head(value)
 
     """Removes the input node from its current spot in the 
@@ -124,11 +129,10 @@ class DoublyLinkedList:
 
         if node is self.head:
             self.remove_from_head()
-            self.add_to_tail(value)
         else:
             node.delete()
             self.length -= 1
-            self.add_to_tail(value)
+        self.add_to_tail(value)
 
     """Removes a node from the list and handles cases where
     the node was the head or the tail"""
@@ -165,15 +169,20 @@ class DoublyLinkedList:
         
     """Returns the highest value currently in the list"""
     def get_max(self):
+        # if there's no content, return None
         if not self.head:
             return None
+        # otherwise, set 2 variables. one for value comparison, one for nodes
         max_val = self.head.value
         current_node = self.head
+        # as long as there are nodes in the list:
         while current_node:
+            # compare the previous max value to the value at the current node
+            # and if it is higher, then overwrite max_val
             if current_node.value > max_val:
                 max_val = current_node.value
 
-            # increment
+            # move to the next node
             current_node = current_node.next
         
         return max_val
