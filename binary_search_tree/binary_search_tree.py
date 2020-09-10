@@ -15,22 +15,66 @@ class BSTNode:
         self.left = None
         self.right = None
 
+    def __repr__(self):
+        return f'{self.value}'
+
     # Insert the given value into the tree
     def insert(self, value):
-        pass
+        # check whether the value is >= self; if < go to elif
+        if value >= self.value:
+            # if self has no right node, create node using value
+            if self.right == None:
+                self.right = BSTNode(value)
+            # otherwise, recursion on right
+            else:
+                self.right.insert(value)
+        elif value < self.value:
+            if self.left == None:
+                self.left = BSTNode(value)
+            else:
+                self.left.insert(value)
+
 
     # Return True if the tree contains the value
     # False if it does not
     def contains(self, target):
-        pass
+        # if the target value is equal to self.value, contains is True
+        if target == self.value:
+            return True
+        # otherwise check if target is less than value; if greater, skip to next elif
+        elif target < self.value:
+            # if true, and if self has no left node, return false
+            if not self.left == None:
+                return False
+            # otherwise, recursion on left node using target
+            else:
+                return self.left.contains(target)
+        elif target > self.value:
+            if self.right == None:
+                return False
+            else:
+                return self.right.contains(target)
 
     # Return the maximum value found in the tree
     def get_max(self):
-        pass
+        # if the current node has a right node
+        if self.right:
+            # it has a larger number, so recursion
+            return self.right.get_max()
+        # otherwise this is max, so return the value
+        else:
+            return self.value
 
     # Call the function `fn` on the value of each node
     def for_each(self, fn):
-        pass
+        # call function on the current value
+        fn(self.value)
+        # if current node has a left node, recursion on it
+        if self.left:
+            self.left.for_each(fn)
+        # once returned, do the same for right
+        if self.right:
+            self.right.for_each(fn)
 
     # Part 2 -----------------------
 
@@ -63,7 +107,7 @@ class BSTNode:
 """
 This code is necessary for testing the `print` methods
 """
-bst = BSTNode(1)
+"""bst = BSTNode(1)
 
 bst.insert(8)
 bst.insert(5)
@@ -83,3 +127,4 @@ print("in order")
 bst.in_order_dft()
 print("post order")
 bst.post_order_dft()  
+"""
