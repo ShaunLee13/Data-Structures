@@ -1,3 +1,5 @@
+from queue import Queue
+from stack import Stack
 """
 Binary search trees are a data structure that enforce an ordering over 
 the data they store. That ordering in turn makes it a lot more efficient 
@@ -44,19 +46,23 @@ class BSTNode:
         # otherwise check if target is less than value; if greater, skip to next elif
         elif target < self.value:
             # if true, and if self has no left node, return false
-            if not self.left == None:
+            if not self.left:
                 return False
             # otherwise, recursion on left node using target
             else:
                 return self.left.contains(target)
         elif target > self.value:
-            if self.right == None:
+            if not self.right:
                 return False
             else:
                 return self.right.contains(target)
 
     # Return the maximum value found in the tree
+    # This method is recursive:
     def get_max(self):
+        #check that there is a node:
+        if not self:
+            return None
         # if the current node has a right node
         if self.right:
             # it has a larger number, so recursion
@@ -64,6 +70,19 @@ class BSTNode:
         # otherwise this is max, so return the value
         else:
             return self.value
+
+    '''
+    Iterable Alternative:
+        # Return the maximum value found in the tree
+    def get_max(self):
+        # while the current node has a right node
+        while self.right:
+            # continue moving right
+            self = self.right
+        # otherwise this is max, so return the value
+        else:
+            return self.value
+    '''
 
     # Call the function `fn` on the value of each node
     def for_each(self, fn):
@@ -81,33 +100,93 @@ class BSTNode:
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
     def in_order_print(self):
-        pass
+        # access the leftmost node from this tree first
+        if self.left:
+            self.left.in_order_print()
+        #print the current node once the method is back
+        print(self.value)
+        # then traverse down right path and continue until done
+        if self.right:
+            self.right.in_order_print()
+
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
     def bft_print(self):
-        pass
+        # Create a new queue
+        values = Queue()
+        # Add our starting node to the queue
+        values.enqueue(self)
+        # As long as the queue is not empty:
+        while values.size > 0:
+            # dequeue the first node in values and print it
+            self = values.dequeue()
+            print(self.value)
+            #if there is a left node, add it to the queue
+            if self.left:
+                values.enqueue(self.left)
+            #if there's a right node, add it as well
+            if self.right:
+                values.enqueue(self.right)
+            #this increases our values.size
+            #continuing the loop until done
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
     def dft_print(self):
-        pass
+        #instantiate a stack
+        values = Stack()
+        #push starting node
+        values.push(self)
+        #while stack is not empty:
+        while values.size > 0:
+            #pop the node
+            #print node.value
+            self = values.pop()
+            print(self.value)
+            #if node.left:
+                #push left node
+            if self.left:
+                values.push(self.left)
+            #if node.right:
+                #push right node
+            if self.right:
+                values.push(self.right)
 
     # Stretch Goals -------------------------
     # Note: Research may be required
 
     # Print Pre-order recursive DFT
     def pre_order_dft(self):
-        pass
+        # check that there is a value here
+        if self:
+            # as long as there is a node, print this nodes value
+            # NOTE: This function essentially works the same as dft_print
+            # just with recursion instead of iteration
+            print(self.value)
+            # if children nodes exist, call method on them
+            if self.left:
+                self.left.pre_order_dft()
+            if self.right:
+                self.right.pre_order_dft()
 
     # Print Post-order recursive DFT
     def post_order_dft(self):
-        pass
+        # check that there is a value here
+        if self:
+            # if children nodes exist, call method on them
+            if self.left:
+                self.left.post_order_dft()
+            if self.right:
+                self.right.post_order_dft()
+            # after returning from subtrees, print this nodes value
+            print(self.value)
+
 
 """
 This code is necessary for testing the `print` methods
 """
-"""bst = BSTNode(1)
+bst = BSTNode(1)
 
 bst.insert(8)
 bst.insert(5)
@@ -124,7 +203,6 @@ print("elegant methods")
 print("pre order")
 bst.pre_order_dft()
 print("in order")
-bst.in_order_dft()
+bst.in_order_print()
 print("post order")
 bst.post_order_dft()  
-"""
